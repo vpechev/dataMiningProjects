@@ -1,0 +1,6 @@
+G:\Codding\ASPNET\DataMining\DataMining\FrogsProblem\bin\Debug\FrogsProblem.exe.config
+G:\Codding\ASPNET\DataMining\DataMining\FrogsProblem\obj\Debug\FrogsProblem.csprojResolveAssemblyReference.cache
+G:\Codding\ASPNET\DataMining\DataMining\FrogsProblem\bin\Debug\FrogsProblem.exe
+G:\Codding\ASPNET\DataMining\DataMining\FrogsProblem\bin\Debug\FrogsProblem.pdb
+G:\Codding\ASPNET\DataMining\DataMining\FrogsProblem\obj\Debug\FrogsProblem.exe
+G:\Codding\ASPNET\DataMining\DataMining\FrogsProblem\obj\Debug\FrogsProblem.pdb
