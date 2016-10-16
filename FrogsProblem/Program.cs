@@ -19,7 +19,13 @@ namespace FrogsProblem
 //3 6";
             //Dfs(vertices, 0);
             
-            int [] array = ArrayUtil.InitializeArray(3);
+            int [] array = ArrayUtil.InitializeArray(2);
+            int[] indexesArray = new int[array.Length];
+            for (int i = 0; i < indexesArray.Length; i++)
+            {
+                indexesArray[i] = i;
+            }
+            FrogJumperUtil.GetPer(indexesArray);
             //Dfs(array.ToList(), array[0]); 
             Console.ReadLine();
         }
