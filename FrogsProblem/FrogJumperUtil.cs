@@ -10,53 +10,73 @@ namespace FrogsProblem
     {
         public static void BuildGraph(Node current)
         {
-            current.Children = new List<Node>();
-            Console.WriteLine(string.Join("{0}, ", current.Combination));
-            GetPer(current, 0, current.Combination.Length - 1);
+            
+            //current.Children = 
+            //if (children.Count == 0)
+            //{
+            //    return;
+            //}
+            //else
+            //{
+            //    foreach (var item in children)
+            //    {
+            //        BuildGraph(item);
+            //    }
+            //}
+            //Console.WriteLine(string.Join("{0}, ", current.Combination));
+           // GetPer(current, 0, current.Combination.Length - 1);
 
-            if (current.Children.Count != 0)
-            {
-                GetPer(current);
-            }
+            //if (current.Children.Count != 0)
+            //{
+            //    GetPer(current);
+            //}
+            
         }
 
-        public static void GetPer(Node current)
+        public static void Permute(Node current, int[] valuesArray)
         {
-            foreach (var child in current.Children)
-	        {
-                child.Children = new List<Node>();
-                if (HasMove(child.Combination))
-                {
-                    GetPer(child, 0, child.Combination.Length - 1);
-                }
-	        } 
+            List<Node> permutations = new List<Node>();
+            permuteHelper(current, current.Combination, 0, permutations, valuesArray);
+
+            //foreach (var item in permutations)
+            //{
+            //    Console.WriteLine(string.Join(" ",item));
+            //}
+            current.Children = permutations;
         }
 
-        private static void GetPer(Node current, int start, int end)
+        private static void permuteHelper(Node current, int[] arr, int index, List<Node> permutations, int[] valuesArray)
         {
-            if (start == end)
-            {
-                var newChild = new Node()
+            if(index > arr.Length - 1){ //If we are at the last element - nothing left to permute
+                if (HasMove(arr, valuesArray))
                 {
-                    Combination = current.Combination,
-                    Parent = current,
-                    Children = new List<Node>()
-                };
-
-                if (HasMove(newChild.Combination) && !ArrayUtil.AreEqual(current.Combination, newChild.Combination))
-                {
-                    Console.WriteLine(string.Join("{0}, ", newChild.Combination));
-                    current.Children.Add(newChild);
+                    int[] newCombinationArray = new int[arr.Length];
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        newCombinationArray[i] = arr[i];
+                    }
+                
+                    permutations.Add(new Node(){
+                                        Combination = newCombinationArray,
+                                        Parent = current
+                                    });
                 }
             }
-            else
-            {
-                for (int i = start; i <= end; i++)
-                {
-                    Swap(ref current.Combination[start], ref current.Combination[i]);
-                    GetPer(current, start + 1, end);
-                    Swap(ref current.Combination[start], ref current.Combination[i]);
-                }
+
+            for(int i = index; i < arr.Length; i++){ //For each index in the sub array arr[index...end]
+
+                //Swap the elements at indices index and i
+                int t = arr[index];
+                arr[index] = arr[i];
+                arr[i] = t;
+
+                //Recurse on the sub array arr[index+1...end]
+                permuteHelper(current, arr, index + 1, permutations, valuesArray);
+
+                //Swap the elements back
+                t = arr[index];
+                arr[index] = arr[i];
+                arr[i] = t;
             }
         }
 
@@ -115,23 +135,24 @@ namespace FrogsProblem
         //    array[currentIndex + step] = currentValue;
         //}
 
-        private static void Swap(ref int a, ref int b)
+        private static void Swap(int[] list, int a, int b)
         {
             if (a == b) 
                 return;
 
-            a ^= b;
-            b ^= a;
-            a ^= b;
+            int c;
+            c = list[a];
+            list[a] = list[b];
+            list[b] = c;
         }
 
-        public static bool HasMove(int[] list)
+        public static bool HasMove(int[] list, int[] valuesArray)
         {
-            int freePlace = FrogJumperUtil.FindIndexOfFreePlace(list, Program.FreePlaceSymbol);
-            for (int i = 1; i < list.Length-2; i++)
+            //int freePlaceIndex = FrogJumperUtil.FindIndexOfFreePlace(list, Program.FreePlaceSymbol);
+            for (int i = 1; i < valuesArray.Length - 2; i++)
             {
-                if (list[i] == Program.LeftFrogSymbol && list[i] == list[i + 1] && list[i + 1] != Program.FreePlaceSymbol       // 1 1 2
-                    || list[i] == Program.rightFrogSymbol && list[i] == list[i + 1] && list[i - 1] != Program.FreePlaceSymbol)  // 1 2 2
+                if (valuesArray[i] == Program.LeftFrogSymbol && valuesArray[i] == valuesArray[i + 1] && valuesArray[i + 1] != Program.FreePlaceSymbol       // 1 1 2
+                    || valuesArray[i] == Program.rightFrogSymbol && valuesArray[i] == valuesArray[i + 1] && valuesArray[i - 1] != Program.FreePlaceSymbol)  // 1 2 2
                 {
                     return false;
                 }

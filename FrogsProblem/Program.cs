@@ -13,45 +13,45 @@ namespace FrogsProblem
         public const int rightFrogSymbol = 2;
         static void Main(string[] args)
         {          
-            int [] array = ArrayUtil.InitializeArray(2);
-            //int[] indexesArray = new int[array.Length];
-            //for (int i = 0; i < indexesArray.Length; i++)
-            //{
-            //    indexesArray[i] = i;
-            //}
+            int [] valuesArray = ArrayUtil.InitializeArray(2);
+            int[] indexesArray = new int[valuesArray.Length];
+            for (int i = 0; i < indexesArray.Length; i++)
+            {
+                indexesArray[i] = i;
+            }
 
             var inputNode = new Node()
             {
                 Parent = null,
-                Combination = array,
-                Children = null
+                Combination = indexesArray,
             };
+            FrogJumperUtil.Permute(inputNode, valuesArray);
 
             FrogJumperUtil.BuildGraph(inputNode);
             //Dfs(array.ToList(), array[0]); 
             Console.ReadLine();
         }
 
-        //private static void Dfs(List<int[]> vertices, int v)
-        //{
-        //    Dfs(vertices, v, new HashSet<int>());
-        //}
+        private static void Dfs(List<int[]> vertices, int v)
+        {
+            Dfs(vertices, v, new HashSet<int>());
+        }
 
-        //private static void Dfs(List<int[]> vertices, int v, HashSet<int> visited)
-        //{
-        //    if (visited.Contains(v))
-        //    {
-        //        return;
-        //    }
+        private static void Dfs(List<int[]> vertices, int v, HashSet<int> visited)
+        {
+            if (visited.Contains(v))
+            {
+                return;
+            }
 
-        //    Console.WriteLine(v + 1);
-        //    visited.Add(v);
+            Console.WriteLine(v + 1);
+            visited.Add(v);
 
-        //    foreach (var item in vertices[v])
-        //    {
-        //        Dfs(vertices, item, visited);
-        //    }
-        //}
+            foreach (var item in vertices[v])
+            {
+                Dfs(vertices, item, visited);
+            }
+        }
 
         ////private static List<int>[] buildgraphGraph(List<int[]> input, int count, Node parent)
         //private static List<int>[] buildgraphGraph(Node current)
