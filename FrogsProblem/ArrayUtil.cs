@@ -25,5 +25,15 @@ namespace FrogsProblem
         {
             Console.WriteLine(string.Join(" ", array));
         }
+
+        public static bool AreEqual(int[] first, int[] second)
+        {
+            for (int i = 0; i < first.Length; i++)
+            {
+                if (first[i] != second[i])
+                    return false;
+            }
+            return true;
+        }
     }
 }
