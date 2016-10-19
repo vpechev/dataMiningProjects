@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FrogsProblem
 {
-    class ArrayUtil
+    public class ArrayUtil
     {
         public static int[] InitializeArray(int n)
         {
