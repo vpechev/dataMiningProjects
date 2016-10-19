@@ -13,7 +13,7 @@ namespace FrogsProblem
         public const int RightFrogSymbol = 2;
         static void Main(string[] args)
         {
-            int n = 2;
+            int n = 10;
             int [] valuesArray = ArrayUtil.InitializeArray(n);
             int[] indexesArray = new int[valuesArray.Length];
             for (int i = 0; i < indexesArray.Length; i++)
@@ -21,17 +21,53 @@ namespace FrogsProblem
                 indexesArray[i] = i;
             }
 
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             var inputNode = new Node()
             {
                 Parent = null,
                 Combination = indexesArray,
-                Children = new List<Node>()
+                Children = new List<Node>(),
+                IsExit = false
             };
 
             var frogJumperUtil = new FrogJumperUtil(valuesArray);
 
             frogJumperUtil.GenerateChildren(inputNode);
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine("Generate root with first level children: {0} ms", elapsedMs);
+
+            watch = System.Diagnostics.Stopwatch.StartNew();
             frogJumperUtil.GenerateGraph(inputNode);
+            watch.Stop();
+            elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine("Generate rest of the graph: {0} ms", elapsedMs);
+
+            watch = System.Diagnostics.Stopwatch.StartNew();
+            Node exit = frogJumperUtil.ExitNode;
+            List<int[]> list = new List<int[]>();
+            list.Add(exit.Combination);
+            var currentParent = exit.Parent;
+            do
+            {
+                list.Add(currentParent.Combination);
+                currentParent = currentParent.Parent;
+            }
+            while (currentParent != null);
+
+            for (int i = list.Count -1 ; i >=0; i--)
+            {
+                int[] currentRow = list[i];
+                for (int j = 0; j < currentRow.Length; j++)
+                {
+                    Console.Write("{0} ", valuesArray[currentRow[j]]);
+                }
+                Console.WriteLine();
+            }
+            watch.Stop();
+            elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine("Print result: {0} ms", elapsedMs);
+
             //Dfs(array.ToList(), array[0]); 
             Console.ReadLine();
         }

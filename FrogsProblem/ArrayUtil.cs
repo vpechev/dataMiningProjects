@@ -35,5 +35,15 @@ namespace FrogsProblem
             }
             return true;
         }
+
+        public static int FindIndexOfFreePlace(int[] list, int freePlaceSymbol)
+         {
+             for (int i = 0; i < list.Length; i++)
+             {
+                 if (list[i] == freePlaceSymbol)
+                     return i;
+             }
+             throw new Exception();
+         }
     }
 }

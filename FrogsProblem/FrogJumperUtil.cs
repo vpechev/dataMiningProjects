@@ -9,6 +9,7 @@ namespace FrogsProblem
     public class FrogJumperUtil
     {
         private int[] ValuesArray;
+        public Node ExitNode { get; set; }
         
         public FrogJumperUtil(int[] valuesArray)
         {
@@ -24,6 +25,8 @@ namespace FrogsProblem
 
         public void GenerateGraph(Node current)
         {
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+            
             if (current.Children.Count == 0)
                 return;
 
@@ -31,7 +34,9 @@ namespace FrogsProblem
             {
                 if (IsExit(child.Combination))
                 {
-                    Console.WriteLine("EXIT: " + current.Children.IndexOf(child));
+                    child.IsExit = true;
+                    ExitNode = child;
+                    //Console.WriteLine("EXIT: " + current.Children.IndexOf(child));
                     return;
                 }
                 else
@@ -40,10 +45,15 @@ namespace FrogsProblem
                     GenerateGraph(child);
                 }
             }
+            //watch.Stop();
+            //var elapsedMs = watch.ElapsedMilliseconds;
+            //Console.WriteLine("Inside GenerateGraph: {0} ms", elapsedMs);
         }
 
         public void GenerateChildren(Node current)
         {
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+            
             int[] arr = new int[current.Combination.Length];
             Array.Copy(current.Combination, arr, current.Combination.Length);
             for (int i = 0; i < arr.Length; i++)
@@ -57,6 +67,10 @@ namespace FrogsProblem
                     JumpLeft(current, arr, i);
                 }
             }
+            
+            //watch.Stop();
+            //var elapsedMs = watch.ElapsedMilliseconds;
+            //Console.WriteLine("Generate children: {0} ms", elapsedMs);
         }
 
         private void JumpRight(Node current, int[] arr, int i)
@@ -69,7 +83,7 @@ namespace FrogsProblem
                 if (HasMove(newNode.Combination))
                 {
                     current.Children.Add(newNode);
-                    Console.WriteLine(string.Join(" ", newNode.Combination));
+                    //Console.WriteLine(string.Join(" ", newNode.Combination));
                 }
 
             }
@@ -82,7 +96,7 @@ namespace FrogsProblem
                 if (HasMove(newNode.Combination))
                 {
                     current.Children.Add(newNode);
-                    Console.WriteLine(string.Join(" ", newNode.Combination));
+                    //Console.WriteLine(string.Join(" ", newNode.Combination));
                 }
             }
         }
@@ -97,7 +111,7 @@ namespace FrogsProblem
                 if (HasMove(newNode.Combination))
                 {
                     current.Children.Add(newNode);
-                    Console.WriteLine(string.Join(" ", newNode.Combination));
+                    //Console.WriteLine(string.Join(" ", newNode.Combination));
                 }
 
             }
@@ -109,7 +123,7 @@ namespace FrogsProblem
                 if (HasMove(newNode.Combination))
                 {
                     current.Children.Add(newNode);
-                    Console.WriteLine(string.Join(" ", newNode.Combination));
+                    //Console.WriteLine(string.Join(" ", newNode.Combination));
                 }
             }
         }
@@ -154,31 +168,85 @@ namespace FrogsProblem
 
         public bool HasMove(int[] list)
         {
-            for (int i = 1; i < list.Length - 2; i++)
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+            //var elapsedMs = -1L;
+            int freeSymbolIndex = ArrayUtil.FindIndexOfFreePlace(list, Program.FreePlaceSymbol);
+
+            if (this.ValuesArray[list[0]] == freeSymbolIndex && this.ValuesArray[list[1]] == Program.LeftFrogSymbol
+                || this.ValuesArray[list[list.Length-1]] == freeSymbolIndex && this.ValuesArray[list[list.Length - 1]] == Program.RightFrogSymbol)
             {
-                if (this.ValuesArray[list[i-1]] == Program.LeftFrogSymbol && this.ValuesArray[list[i-1]] == this.ValuesArray[list[i]] && this.ValuesArray[list[i + 1]] != Program.FreePlaceSymbol && this.ValuesArray[list[i + 2]] != Program.FreePlaceSymbol // 1 1 2 2
-                    || this.ValuesArray[list[i]] == Program.RightFrogSymbol && this.ValuesArray[list[i]] == this.ValuesArray[list[i + 1]] && this.ValuesArray[list[i - 1]] != Program.FreePlaceSymbol && this.ValuesArray[list[i + 2]] != Program.FreePlaceSymbol)  // 1 2 2 2
+                //watch.Stop();
+                //elapsedMs = watch.ElapsedMilliseconds;
+                //Console.WriteLine("Has Move: {0} ms", elapsedMs);
+                return false;
+            }
+
+            // .... 0 1 1 2
+            for (int i = freeSymbolIndex + 1; i < list.Length-1; i++)
+            {
+                if (this.ValuesArray[list[i]] == Program.LeftFrogSymbol && this.ValuesArray[list[i+1]] == Program.LeftFrogSymbol)
                 {
-                    return false;
+                    for (int j = i+1; j < list.Length; j++)
+                    {
+                        if (this.ValuesArray[list[i]] == Program.RightFrogSymbol)
+                        {
+                            //watch.Stop();
+                            //elapsedMs = watch.ElapsedMilliseconds;
+                            //Console.WriteLine("Has Move: {0} ms", elapsedMs);
+                            return false;
+                        }
+                    }
                 }
             }
+
+            // .. 1 2 2 ....
+            for (int i = 0; i < freeSymbolIndex; i++)
+            {
+                if (this.ValuesArray[list[i]] == Program.RightFrogSymbol && this.ValuesArray[list[i + 1]] == Program.RightFrogSymbol)
+                {
+                    for (int j = i + 1; j < freeSymbolIndex; j++)
+                    {
+                        if (this.ValuesArray[list[i]] == Program.LeftFrogSymbol)
+                        {
+                            //watch.Stop();
+                            //elapsedMs = watch.ElapsedMilliseconds;
+                            //Console.WriteLine("Has Move: {0} ms", elapsedMs);
+                            return false;
+                        }
+                    }
+                }
+            }
+            
+            //watch.Stop();
+            //elapsedMs = watch.ElapsedMilliseconds;
+            //Console.WriteLine("Has Move: {0} ms", elapsedMs);
             return true;
         }
 
         public bool IsExit(int[] list)
         {
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+            //var elapsedMs = -1L;
             if (ValuesArray[list[list.Length / 2]] != 0)
             {
+                //watch.Stop();
+                //elapsedMs = watch.ElapsedMilliseconds;
+                //Console.WriteLine("IsExit: {0} ms", elapsedMs);
                 return false;
             }
 
             for (int i = 0; i < list.Length/2; i++)
             {
-                if (ValuesArray[list[i]] != Program.RightFrogSymbol || ValuesArray[list[list.Length / 2 + i + 1]] != Program.LeftFrogSymbol) { 
+                if (ValuesArray[list[i]] != Program.RightFrogSymbol || ValuesArray[list[list.Length / 2 + i + 1]] != Program.LeftFrogSymbol) {
+                    //watch.Stop();
+                    //elapsedMs = watch.ElapsedMilliseconds;
+                    //Console.WriteLine("IsExit: {0} ms", elapsedMs);
                     return false;
                 }
             }
-
+            //watch.Stop();
+            //elapsedMs = watch.ElapsedMilliseconds;
+            //Console.WriteLine("IsExit: {0} ms", elapsedMs);
             return true;
         }
     }
