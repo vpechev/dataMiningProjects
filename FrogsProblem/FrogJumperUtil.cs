@@ -10,6 +10,8 @@ namespace FrogsProblem
     {
         private int[] ValuesArray;
         public Node ExitNode { get; set; }
+
+        public bool ExitFound { get; set; }
         
         public FrogJumperUtil(int[] valuesArray)
         {
@@ -27,7 +29,7 @@ namespace FrogsProblem
         {
             //var watch = System.Diagnostics.Stopwatch.StartNew();
             
-            if (current.Children.Count == 0)
+            if (current.Children.Count == 0 || ExitFound)
                 return;
 
             foreach (var child in current.Children)
@@ -36,7 +38,8 @@ namespace FrogsProblem
                 {
                     child.IsExit = true;
                     ExitNode = child;
-                    //Console.WriteLine("EXIT: " + current.Children.IndexOf(child));
+                    ExitFound = true;
+                    Console.WriteLine("EXIT: " + current.Children.IndexOf(child));
                     return;
                 }
                 else
@@ -53,7 +56,10 @@ namespace FrogsProblem
         public void GenerateChildren(Node current)
         {
             //var watch = System.Diagnostics.Stopwatch.StartNew();
-            
+
+            if (ExitFound)
+                return;
+
             int[] arr = new int[current.Combination.Length];
             Array.Copy(current.Combination, arr, current.Combination.Length);
             for (int i = 0; i < arr.Length; i++)

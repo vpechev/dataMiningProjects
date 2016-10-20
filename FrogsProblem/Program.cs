@@ -13,15 +13,18 @@ namespace FrogsProblem
         public const int RightFrogSymbol = 2;
         static void Main(string[] args)
         {
-            int n = 10;
+            int n = 2;
             int [] valuesArray = ArrayUtil.InitializeArray(n);
             int[] indexesArray = new int[valuesArray.Length];
+            System.Diagnostics.Stopwatch watch;
+            long elapsedMs;
+
             for (int i = 0; i < indexesArray.Length; i++)
             {
                 indexesArray[i] = i;
             }
 
-            var watch = System.Diagnostics.Stopwatch.StartNew();
+            watch = System.Diagnostics.Stopwatch.StartNew();
             var inputNode = new Node()
             {
                 Parent = null,
@@ -33,17 +36,17 @@ namespace FrogsProblem
             var frogJumperUtil = new FrogJumperUtil(valuesArray);
 
             frogJumperUtil.GenerateChildren(inputNode);
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Console.WriteLine("Generate root with first level children: {0} ms", elapsedMs);
+            //watch.Stop();
+            //elapsedMs = watch.ElapsedMilliseconds;
+            //Console.WriteLine("Generate root with first level children: {0} ms", elapsedMs);
 
-            watch = System.Diagnostics.Stopwatch.StartNew();
+            //watch = System.Diagnostics.Stopwatch.StartNew();
             frogJumperUtil.GenerateGraph(inputNode);
-            watch.Stop();
-            elapsedMs = watch.ElapsedMilliseconds;
-            Console.WriteLine("Generate rest of the graph: {0} ms", elapsedMs);
+            //watch.Stop();
+            //elapsedMs = watch.ElapsedMilliseconds;
+            //Console.WriteLine("Generate rest of the graph: {0} ms", elapsedMs);
 
-            watch = System.Diagnostics.Stopwatch.StartNew();
+            //watch = System.Diagnostics.Stopwatch.StartNew();
             Node exit = frogJumperUtil.ExitNode;
             List<int[]> list = new List<int[]>();
             list.Add(exit.Combination);
