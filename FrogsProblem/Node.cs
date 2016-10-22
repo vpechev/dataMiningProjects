@@ -22,14 +22,14 @@ namespace FrogsProblem
             {
                 this.Combination[i] = combination[i];
             }
-            this.Children = new List<Node>();
+            //this.Children = new List<Node>();
             //watch.Stop();
             //var elapsedMs = watch.ElapsedMilliseconds;
             //Console.WriteLine("New Node creation: {0} ms", elapsedMs);
         }
 
         public Node Parent { get; set; }
-        public List<Node> Children { get; set; }
+        //public List<Node> Children { get; set; }
         public int[] Combination { get; set; }
         public bool IsExit { get; set; }
     }

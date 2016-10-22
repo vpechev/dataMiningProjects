@@ -26,22 +26,20 @@ namespace FrogsProblem
             Console.WriteLine(string.Join(" ", array));
         }
 
-        public static bool AreEqual(int[] first, int[] second)
-        {
-            for (int i = 0; i < first.Length; i++)
-            {
-                if (first[i] != second[i])
-                    return false;
-            }
-            return true;
-        }
-
         public static int FindIndexOfFreePlace(int[] list, int freePlaceSymbol)
          {
-             for (int i = 0; i < list.Length; i++)
+             int halfLen = list.Length/2;
+             if (list[halfLen + 1] == freePlaceSymbol)
+                 return halfLen + 1;
+
+             for (int i = 0; i <= halfLen; i++)
              {
                  if (list[i] == freePlaceSymbol)
                      return i;
+                 else if (halfLen + i == freePlaceSymbol)
+                 {
+                     return halfLen + i;
+                 }
              }
              throw new Exception();
          }

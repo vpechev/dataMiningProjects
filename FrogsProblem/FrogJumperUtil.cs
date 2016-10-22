@@ -25,27 +25,38 @@ namespace FrogsProblem
             }
         }
 
-        public void GenerateGraph(Node current)
+        public void GenerateGraph(Node current, List<Node> children)
         {
             //var watch = System.Diagnostics.Stopwatch.StartNew();
-            
-            if (current.Children.Count == 0 || ExitFound)
+
+            if (children.Count == 0 || ExitFound)
                 return;
 
-            foreach (var child in current.Children)
+            foreach (var child in children)
             {
+                if (ExitFound)
+                {
+                    for (int i = 0; i < child.Combination.Length; i++)
+                    {
+                        Console.Write("{0} ", ValuesArray[child.Combination[i]]);
+                    }
+                    Console.WriteLine();
+                    return;
+                }
+
                 if (IsExit(child.Combination))
                 {
                     child.IsExit = true;
                     ExitNode = child;
                     ExitFound = true;
-                    Console.WriteLine("EXIT: " + current.Children.IndexOf(child));
+                    Console.WriteLine("EXIT: ");
                     return;
                 }
                 else
                 {
-                    GenerateChildren(child);
-                    GenerateGraph(child);
+                    List<Node> preChildren = GenerateChildren(child);
+                    if (preChildren != null && preChildren.Count > 0)
+                        GenerateGraph(child, preChildren);
                 }
             }
             //watch.Stop();
@@ -53,33 +64,35 @@ namespace FrogsProblem
             //Console.WriteLine("Inside GenerateGraph: {0} ms", elapsedMs);
         }
 
-        public void GenerateChildren(Node current)
+        public List<Node> GenerateChildren(Node current)
         {
             //var watch = System.Diagnostics.Stopwatch.StartNew();
 
             if (ExitFound)
-                return;
+                return null;
 
+            List<Node> children = new List<Node>();
             int[] arr = new int[current.Combination.Length];
             Array.Copy(current.Combination, arr, current.Combination.Length);
             for (int i = 0; i < arr.Length; i++)
             {
                 if (this.ValuesArray[arr[i]] == Program.LeftFrogSymbol)
                 {
-                    JumpRight(current, arr, i);
+                    JumpRight(current, children, arr, i);
                 }
                 else if (this.ValuesArray[arr[i]] == Program.RightFrogSymbol)
                 {
-                    JumpLeft(current, arr, i);
+                    JumpLeft(current, children, arr, i);
                 }
             }
+            return children;
             
             //watch.Stop();
             //var elapsedMs = watch.ElapsedMilliseconds;
             //Console.WriteLine("Generate children: {0} ms", elapsedMs);
         }
 
-        private void JumpRight(Node current, int[] arr, int i)
+        private void JumpRight(Node current, List<Node> children, int[] arr, int i)
         {
             if (i < arr.Length - 1 && IsJumpAllowed(arr, i, i + 1))
             {
@@ -88,7 +101,7 @@ namespace FrogsProblem
                 JumpOneLeft(arr, i + 1);
                 if (HasMove(newNode.Combination))
                 {
-                    current.Children.Add(newNode);
+                    children.Add(newNode);
                     //Console.WriteLine(string.Join(" ", newNode.Combination));
                 }
 
@@ -101,13 +114,13 @@ namespace FrogsProblem
                 JumpTwoLeft(arr, i + 2);
                 if (HasMove(newNode.Combination))
                 {
-                    current.Children.Add(newNode);
+                    children.Add(newNode);
                     //Console.WriteLine(string.Join(" ", newNode.Combination));
                 }
             }
         }
 
-        private void JumpLeft(Node current, int[] arr, int i)
+        private void JumpLeft(Node current, List<Node> children, int[] arr, int i)
         {
             if (i >= 1 && IsJumpAllowed(arr, i, i - 1))
             {
@@ -116,7 +129,7 @@ namespace FrogsProblem
                 JumpOneRight(arr, i - 1);
                 if (HasMove(newNode.Combination))
                 {
-                    current.Children.Add(newNode);
+                    children.Add(newNode);
                     //Console.WriteLine(string.Join(" ", newNode.Combination));
                 }
 
@@ -128,7 +141,7 @@ namespace FrogsProblem
                 JumpTwoRight(arr, i - 2);
                 if (HasMove(newNode.Combination))
                 {
-                    current.Children.Add(newNode);
+                    children.Add(newNode);
                     //Console.WriteLine(string.Join(" ", newNode.Combination));
                 }
             }
