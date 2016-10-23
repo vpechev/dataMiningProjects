@@ -8,79 +8,38 @@ namespace FrogsProblem
 {
     class Program
     {
-        public const int FreePlaceSymbol = 0;
-        public const int LeftFrogSymbol = 1;
-        public const int RightFrogSymbol = 2;
+        public const char FreePlaceSymbol = '0';
+        public const char LeftFrogSymbol = '1';
+        public const char RightFrogSymbol = '2';
         static void Main(string[] args)
         {
             Console.Write("Enter N: ");
             int n = Int32.Parse(Console.ReadLine());
             Console.WriteLine();
-            int [] valuesArray = ArrayUtil.InitializeArray(n);
-            int[] indexesArray = new int[valuesArray.Length];
+            string valuesArray = ArrayUtil.InitializeArray(n);
             System.Diagnostics.Stopwatch watch;
             long elapsedMs;
-
-            for (int i = 0; i < indexesArray.Length; i++)
-            {
-                indexesArray[i] = i;
-            }
 
             watch = System.Diagnostics.Stopwatch.StartNew();
             var inputNode = new Node()
             {
-                Parent = null,
-                Combination = indexesArray,
-                //Children = new List<Node>(),
+                //Parent = null,
+                Combination = valuesArray,
                 IsExit = false
             };
 
-            var frogJumperUtil = new FrogJumperUtil(valuesArray);
+            var frogJumperUtil = new FrogJumperUtil();
 
             List<Node> children = frogJumperUtil.GenerateChildren(inputNode);
-            //watch.Stop();
-            //elapsedMs = watch.ElapsedMilliseconds;
-            //Console.WriteLine("Generate root with first level children: {0} ms", elapsedMs);
 
-            //watch = System.Diagnostics.Stopwatch.StartNew();
             frogJumperUtil.GenerateGraph(inputNode, children);
-            //watch.Stop();
-            //elapsedMs = watch.ElapsedMilliseconds;
-            //Console.WriteLine("Generate rest of the graph: {0} ms", elapsedMs);
 
-            //watch = System.Diagnostics.Stopwatch.StartNew();
-            Node exit = frogJumperUtil.ExitNode;
-            List<int[]> list = new List<int[]>();
-            list.Add(exit.Combination);
-            var currentParent = exit.Parent;
-            do
-            {
-                list.Add(currentParent.Combination);
-                currentParent = currentParent.Parent;
-            }
-            while (currentParent != null);
-
-            //for (int i = list.Count -1 ; i >=0; i--)
-            //{
-            //    int[] currentRow = list[i];
-            //    for (int j = 0; j < currentRow.Length; j++)
-            //    {
-            //        Console.Write("{0} ", valuesArray[currentRow[j]]);
-            //    }
-            //    Console.WriteLine();
-            //}
-
-            for (int i = 0; i < valuesArray.Length; i++)
-            {
-                Console.Write("{0} ", valuesArray[i]);
-            }
-            Console.WriteLine();
+            Console.WriteLine(valuesArray);
 
             watch.Stop();
             elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine("Print result: {0} ms", elapsedMs);
 
-            //Dfs(array.ToList(), array[0]); 
             Console.ReadLine();
         }
 
