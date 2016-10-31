@@ -25,22 +25,22 @@ namespace SlidingBlocks
 
             if (x > 0)
             {   //up
-                AddChildToNode(currentNode, x, y, x - 1, y);
+                AddChildToNode(currentNode, x, y, x - 1, y, "up");
             }
 
             if (x < currentNode.Board.GetLength(0) - 1)
             {   //down
-                AddChildToNode(currentNode, x, y, x + 1, y);
+                AddChildToNode(currentNode, x, y, x + 1, y, "down");
             }
 
             if (y > 0)
             {   //left
-                AddChildToNode(currentNode, x, y, x, y - 1);
+                AddChildToNode(currentNode, x, y, x, y - 1, "left");
             }
 
             if (y < currentNode.Board.GetLength(0) - 1)
             {   //right
-                AddChildToNode(currentNode, x, y, x, y + 1);
+                AddChildToNode(currentNode, x, y, x, y + 1, "right");
             }
         }
 
@@ -93,13 +93,14 @@ namespace SlidingBlocks
             
         }
 
-        private static void AddChildToNode(Node oldNode, int currentX, int currentY, int newX, int newY)
+        private static void AddChildToNode(Node oldNode, int currentX, int currentY, int newX, int newY, string moveDirection)
         {
             var newBoard = CopyBoard(oldNode.Board);
             SwapBoardValues(newBoard, currentX, currentY, newX, newY);
             var newNode = new Node(){
                 Board = newBoard,
-                Distance = oldNode.Distance + 1
+                Distance = oldNode.Distance + 1,
+                MoveDirection = moveDirection
             };
             oldNode.ChildrenBoards.Add(newNode);
         }
