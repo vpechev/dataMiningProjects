@@ -21,16 +21,17 @@ namespace SlidingBlocks
             {
                 Node currentElement = priorityQueue.Deque();
                 visited.Add(currentElement.Board);
-                Console.WriteLine(currentElement.MoveDirection);
-                Console.WriteLine("Current Element Heuristic: {0} ", currentElement.Heuristic);
-                BoardUtil.PrintBoard(currentElement.Board);
                 
                 if (currentElement.Heuristic == 0)
                 {
                     Console.WriteLine();
+                    Console.WriteLine("Steps for solving the puzzle: ");
+                    Console.WriteLine(currentElement.MoveDirection);
+                    Console.WriteLine("------------");
                     Console.WriteLine("The result board is: ");
                     BoardUtil.PrintBoard(currentElement.Board);
                     Console.WriteLine("Total distance: " + currentElement.Distance);
+                    Console.WriteLine("------------");
                     return;
                 }
                 else

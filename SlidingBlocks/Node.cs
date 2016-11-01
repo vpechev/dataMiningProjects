@@ -8,9 +8,6 @@ namespace SlidingBlocks
 {
     public class Node : IComparable<Node>
     {
-        //private int _evaluationValue;
-        //private int _heuristic;
-        //private int _distance;
         private List<Node> _childrenBoards;
 
         public int Heuristic {
@@ -39,39 +36,20 @@ namespace SlidingBlocks
             return Heuristic + Distance;
         }
 
-        //public override bool Equals(object obj)
-        //{
-        //    if (obj == null) 
-        //        return false;
-        //    else if (BoardUtil.AreBoardsEqual(this.Board, ((Node)obj).Board))
-        //        return true;
-        //    else 
-        //        return Equals(obj);
-        //}
-
         public int CompareTo(Node other)
         {
-            return this.GetEvaluationFuction().CompareTo(other.GetEvaluationFuction()); 
+            int val = this.GetEvaluationFuction().CompareTo(other.GetEvaluationFuction());
+            if (val != 0)
+            {
+                return val;
+            }
+            else if (BoardUtil.AreBoardsEqual(this.Board, other.Board))
+            {
+                return 0;
+            }
+            else
+                return -1;
+
         }
-
-        //public override bool Equals(object obj)
-        //{
-        //    if (obj == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    Node other = (Node)obj;
-
-        //    if (BoardUtil.AreBoardsEqual(this.Board, ((Node)obj).Board))
-        //        return true;
-        //    else
-        //        return false;
-        //}
-
-        //public override int GetHashCode()
-        //{
-        //    return this.GetEvaluationFuction();
-        //} 
     }
 }
