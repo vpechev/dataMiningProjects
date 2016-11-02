@@ -27,36 +27,15 @@ namespace NQueensProblem
         public static void PlaceQueens(int n)
         {
             int[] board = new int[n];
-            int[,] conflitsCountCellBoard = new int[n,n];
             
-            List<int> usedRows = RandomInitBoard(board);
+            RandomInitBoard(board);
 
-            //for (int i = 0; i < board.Length; i++)
-            //{
-            //    if (usedRows.Contains(board[i]))
-            //    {
-            //        int currentQueenPlace = conflitsCountCellBoard[ board[i], i ];
-                
-            //        for (int j = 0; j < n; j++)
-            //        {
-            //            //increase column conflicts for current cell
-            //            conflitsCountCellBoard[i, board[j]] += 1;
-            //            //increase row conflicts for current cell
-            //            conflitsCountCellBoard[board[j], i] += 1;
-            //        }
-                
-            //        //increase diagonal conflicts for each cell
-            //        for (int j = 0; j < board.GetLength(0); j++)
-            //        {
-            //            conflitsCountCellBoard[i, i+1] += 1;
-            //        }
-            //    }
-            //}
+            int[] queensConflictsCount = InitQueensConflictsArray(board);
 
             int limit = 4 * n;
             for (int i = 0; i < limit; i++)
             {
-                SwapQueens(board);
+                SwapQueens(board, queensConflictsCount);
 
                 //PrintBoard(board);
                 //Console.WriteLine("{0} ", GetNumberOfConflicts(board, 0));
@@ -79,73 +58,60 @@ namespace NQueensProblem
             }
         }
 
-        private static List<int> RandomInitBoard(int[] board)
+        private static void RandomInitBoard(int[] board)
         {
-            List<int> usedRows = new List<int>();
             for (int i = 0; i < board.Length; i++)
             {
                 var newValue = random.Next(board.Length);
-                
-                if(!usedRows.Contains(newValue)){
-                    usedRows.Add(newValue);
-                }
-
                 board[i] = newValue;
             }
-
-            return usedRows;
         }
 
-        private static int GetMinConflictsColumn(int[] board)
+        //private static int GetMinConflictsColumn(int[] board)
+        //{
+        //    int minConflictsColCount = GetCertainColumnConflictsCount(board, 0);
+        //    int minConflictsColCountIndex = 0;
+
+        //    for (int i = 1; i < board.Length; i++)
+        //    {
+        //        int currentConflictsCount = GetCertainColumnConflictsCount(board, i);
+        //        if (minConflictsColCount > currentConflictsCount)
+        //        {
+        //            minConflictsColCount = currentConflictsCount;
+        //            minConflictsColCountIndex = i;
+        //        }
+        //    }
+
+        //    return minConflictsColCountIndex;
+        //}
+
+        private static int GetMinConflictsQueenRow(int[] swapQueensConflictsArr)
         {
-            int minConflictsColCount = GetCertainColumnConflictsCount(board, 0);
-            int minConflictsColCountIndex = 0;
-
-            for (int i = 1; i < board.Length; i++)
-            {
-                int currentConflictsCount = GetCertainColumnConflictsCount(board, i);
-                if (minConflictsColCount > currentConflictsCount)
-                {
-                    minConflictsColCount = currentConflictsCount;
-                    minConflictsColCountIndex = i;
-                }
-            }
-
-            return minConflictsColCountIndex;
+            return Array.IndexOf(swapQueensConflictsArr, swapQueensConflictsArr.Min());
         }
 
-        private static int GetMaxConflictsColumn(int[] board)
+        private static int GetMaxConflictsQueenRow(int[] swapQueensConflictsArr)
         {
-            int maxConflictsColCount = GetCertainColumnConflictsCount(board, 0);
-            int maxConflictsColCountIndex = 0;
-
-            for (int i = 1; i < board.Length; i++)
-            {
-                int currentConflictsCount = GetCertainColumnConflictsCount(board, i);
-                if (maxConflictsColCount < currentConflictsCount)
-                {
-                    maxConflictsColCount = currentConflictsCount;
-                    maxConflictsColCountIndex = i;
-                }
-            }
-
-            return maxConflictsColCountIndex;
+            return Array.IndexOf(swapQueensConflictsArr, swapQueensConflictsArr.Max());
         }
 
-        private static void SwapQueens(int[] board)
+        private static void SwapQueens(int[] board, int[] queensConflictsCountArray)
         {
-            int minConflictsColumnIndex;
+            int minConflictsColumnIndex = random.Next(board.Length);
             int maxConflictsColumnIndex;
 
-            do
-            {
-                minConflictsColumnIndex = GetMinConflictsColumn(board);
-                maxConflictsColumnIndex = GetMaxConflictsColumn(board);
-            } while (minConflictsColumnIndex == maxConflictsColumnIndex);
+            //do
+            //{
+                //minConflictsColumnIndex = GetMinConflictsQueenRow(queensConflictsCountArray);
+                maxConflictsColumnIndex = GetMaxConflictsQueenRow(queensConflictsCountArray);
+            //} while (minConflictsColumnIndex == maxConflictsColumnIndex);
+
 
             int minConflictsColumn = board[minConflictsColumnIndex];
             board[minConflictsColumnIndex] = board[maxConflictsColumnIndex];
             board[maxConflictsColumnIndex] = minConflictsColumn;
+
+            queensConflictsCountArray = InitQueensConflictsArray(board);
         }
 
         private static int GetCertainColumnConflictsCount(int[] board, int colIndex)
@@ -165,18 +131,39 @@ namespace NQueensProblem
             return conflictsCount;
         }
 
-        private static bool HasConflicts(int[] board)
+        private static int[] InitQueensConflictsArray(int[] board)
         {
+            int[] queensConflictsCount = new int[board.Length];
             for (int i = 0; i < board.Length; i++)
             {
                 int currentElement = board[i];
-                for (int j = i + 1; j < board.Length; j++)
+                for (int j = 0; j < board.Length; j++)
                 {
-                    if (board[j] == currentElement)
-                        return true;
-                    else if (Math.Abs(currentElement - board[j]) == Math.Abs(i - j))
-                        return true;
+                    if (i != j)
+                    {
+                        //current column(i) has other queen
+                        //unpossible because the columns are array indexes and they are unique
+
+                        //current row(board[i]) has other queen
+                        if (board[j] == currentElement)
+                            queensConflictsCount[i]++;
+
+                        //current diagonal has other queen
+                        if (Math.Abs(currentElement - board[j]) == Math.Abs(i - j))
+                            queensConflictsCount[i]++;
+                    }
                 }
+            }
+
+            return queensConflictsCount;
+        }
+
+        private static bool HasConflicts(int[] queensConflitsCountArr)
+        {
+            for (int i = 0; i < queensConflitsCountArr.Length; i++)
+            {
+                if (queensConflitsCountArr[i] > 0)
+                    return true;
             }
 
             return false;
