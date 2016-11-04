@@ -10,10 +10,10 @@ namespace NQueensProblem
     class Program
     {
         private static Random random = new Random();
-        private static int QueenSymbol = 1;
+        public static int COUNTER = 0;
         static void Main(string[] args)
         {
-            int n = 4;
+            int n = 10;
             if (n < 4)
             {
                 Console.WriteLine("{0} queens cannot be placed in this board", n);
@@ -29,21 +29,22 @@ namespace NQueensProblem
             int[] board = new int[n];
             
             RandomInitBoard(board);
-
+            //PrintBoard(board);
             int[] queensConflictsCount = InitQueensConflictsArray(board);
 
-            int limit = 4 * n;
+            if (!HasConflicts(queensConflictsCount))
+            {
+                Console.WriteLine("Yeah the queens are places");
+                PrintBoard(board);
+                return;
+            }
+
+            int limit = n * n;
             for (int i = 0; i < limit; i++)
             {
-                SwapQueens(board, queensConflictsCount);
+                queensConflictsCount = SwapQueens(board, queensConflictsCount);
 
-                //PrintBoard(board);
-                //Console.WriteLine("{0} ", GetNumberOfConflicts(board, 0));
-                //Console.WriteLine("{0} ", GetNumberOfConflicts(board, 1));
-                //Console.WriteLine("{0} ", GetNumberOfConflicts(board, 2));
-                //Console.WriteLine("{0} ", GetNumberOfConflicts(board, 3));
-
-                if (!HasConflicts(board))
+                if (!HasConflicts(queensConflictsCount))
                 {
                     Console.WriteLine("Yeah the queens are places");
                     PrintBoard(board);
@@ -51,7 +52,7 @@ namespace NQueensProblem
                 }
             }
 
-            if (HasConflicts(board))
+            if (HasConflicts(queensConflictsCount))
             {
                 Console.WriteLine("New Recursive call");
                 PlaceQueens(n);
@@ -60,58 +61,70 @@ namespace NQueensProblem
 
         private static void RandomInitBoard(int[] board)
         {
+            List<int> placedValues = new List<int>();
+            bool isPlaceAllowed = false;
             for (int i = 0; i < board.Length; i++)
             {
-                var newValue = random.Next(board.Length);
-                board[i] = newValue;
+                do
+                {
+                    var newValue = random.Next(board.Length);
+                    isPlaceAllowed = isPlacingAllowed(placedValues, newValue, board, i);
+                } while (!isPlaceAllowed);
             }
         }
 
-        //private static int GetMinConflictsColumn(int[] board)
-        //{
-        //    int minConflictsColCount = GetCertainColumnConflictsCount(board, 0);
-        //    int minConflictsColCountIndex = 0;
-
-        //    for (int i = 1; i < board.Length; i++)
-        //    {
-        //        int currentConflictsCount = GetCertainColumnConflictsCount(board, i);
-        //        if (minConflictsColCount > currentConflictsCount)
-        //        {
-        //            minConflictsColCount = currentConflictsCount;
-        //            minConflictsColCountIndex = i;
-        //        }
-        //    }
-
-        //    return minConflictsColCountIndex;
-        //}
+        private static bool isPlacingAllowed(List<int> placedValues, int newValue, int[] board, int index)
+        {
+            if (!placedValues.Contains(newValue))
+            {
+                board[index] = newValue;
+                placedValues.Add(newValue);
+                return true;
+            }
+            return false;
+        }
 
         private static int GetMinConflictsQueenRow(int[] swapQueensConflictsArr)
         {
-            return Array.IndexOf(swapQueensConflictsArr, swapQueensConflictsArr.Min());
+            int minIndex = Array.IndexOf(swapQueensConflictsArr, swapQueensConflictsArr.Min());
+            var indexes = swapQueensConflictsArr.Where(x => x == minIndex).ToList();
+            return indexes[random.Next(indexes.Count-1)];
         }
 
         private static int GetMaxConflictsQueenRow(int[] swapQueensConflictsArr)
         {
-            return Array.IndexOf(swapQueensConflictsArr, swapQueensConflictsArr.Max());
+            int max = swapQueensConflictsArr.Max();
+            var indexes = swapQueensConflictsArr.Where(x => x == max).ToList();
+            return indexes[random.Next(indexes.Count - 1)];
         }
 
-        private static void SwapQueens(int[] board, int[] queensConflictsCountArray)
+        private static int[] SwapQueens(int[] board, int[] queensConflictsCountArray)
         {
-            int minConflictsColumnIndex = random.Next(board.Length);
-            int maxConflictsColumnIndex;
+            int minConflictsColumnIndex;
+            int maxConflictsColumnIndex = GetMaxConflictsQueenRow(queensConflictsCountArray);
+            
+            do
+            {
+                minConflictsColumnIndex = random.Next(board.Length-1);
+            } while (minConflictsColumnIndex == maxConflictsColumnIndex);
 
-            //do
-            //{
-                //minConflictsColumnIndex = GetMinConflictsQueenRow(queensConflictsCountArray);
-                maxConflictsColumnIndex = GetMaxConflictsQueenRow(queensConflictsCountArray);
-            //} while (minConflictsColumnIndex == maxConflictsColumnIndex);
+            int minColumn = board[minConflictsColumnIndex];
+            
+            //decrease conflicts indexes
+            //DereaseConflictsCount(board, minConflictsColumnIndex, queensConflictsCountArray);
+            //DereaseConflictsCount(board, board[maxConflictsColumnIndex], queensConflictsCountArray);
 
-
-            int minConflictsColumn = board[minConflictsColumnIndex];
+            //swap 
             board[minConflictsColumnIndex] = board[maxConflictsColumnIndex];
-            board[maxConflictsColumnIndex] = minConflictsColumn;
+            board[maxConflictsColumnIndex] = minColumn;
+
+            //increase conflicts indexes
+            //IncreaseConflictsCount(board, minConflictsColumnIndex, queensConflictsCountArray);
+            //IncreaseConflictsCount(board, maxConflictsColumnIndex, queensConflictsCountArray);
 
             queensConflictsCountArray = InitQueensConflictsArray(board);
+
+            return queensConflictsCountArray;
         }
 
         private static int GetCertainColumnConflictsCount(int[] board, int colIndex)
@@ -136,37 +149,76 @@ namespace NQueensProblem
             int[] queensConflictsCount = new int[board.Length];
             for (int i = 0; i < board.Length; i++)
             {
-                int currentElement = board[i];
-                for (int j = 0; j < board.Length; j++)
-                {
-                    if (i != j)
-                    {
-                        //current column(i) has other queen
-                        //unpossible because the columns are array indexes and they are unique
-
-                        //current row(board[i]) has other queen
-                        if (board[j] == currentElement)
-                            queensConflictsCount[i]++;
-
-                        //current diagonal has other queen
-                        if (Math.Abs(currentElement - board[j]) == Math.Abs(i - j))
-                            queensConflictsCount[i]++;
-                    }
-                }
+                IncreaseConflictsCount(board, i, queensConflictsCount);
             }
 
             return queensConflictsCount;
         }
 
+        private static void IncreaseConflictsCount(int[] board, int index, int[] queensConflictsCountArr)
+        {
+            int currentElement = board[index];
+            for (int j = 0; j < board.Length; j++)
+            {
+                if (index != j)
+                {
+                    //current column(i) has other queen
+                    //unpossible because the columns are array indexes and they are unique
+
+                    if (queensConflictsCountArr[index] < board.Length - 1)
+                    {
+                        //current row(board[i]) has other queen
+                        if (board[j] == currentElement)
+                            queensConflictsCountArr[index]++;
+                    }
+
+                    if (queensConflictsCountArr[index] < board.Length - 1)
+                    {
+                        //current diagonal has other queen
+                        if (Math.Abs(currentElement - board[j]) == Math.Abs(index - j))
+                            queensConflictsCountArr[index]++;
+                    }
+                }
+            }
+        }
+
+        private static void DereaseConflictsCount(int[] board, int index, int[] queensConflictsCountArr)
+        {
+            int currentElement = board[index];
+            for (int j = 0; j < board.Length; j++)
+            {
+                if (index != j)
+                {
+                    //current column(i) has other queen
+                    //unpossible because the columns are array indexes and they are unique
+
+                    if (queensConflictsCountArr[index] > 0) { 
+                        //current row(board[i]) has other queen 
+                        if (board[j] == currentElement)
+                            queensConflictsCountArr[index]--;
+                    }
+
+                    if (queensConflictsCountArr[index] > 0)
+                    {
+                        //current diagonal has other queen
+                        if (Math.Abs(currentElement - board[j]) == Math.Abs(index - j))
+                            queensConflictsCountArr[index]--;
+                    }
+                }
+            }
+        }
+
         private static bool HasConflicts(int[] queensConflitsCountArr)
         {
-            for (int i = 0; i < queensConflitsCountArr.Length; i++)
-            {
-                if (queensConflitsCountArr[i] > 0)
-                    return true;
-            }
+            //for (int i = 0; i < queensConflitsCountArr.Length; i++)
+            //{
+            //    if (queensConflitsCountArr[i] > 0)
+            //        return true;
+            //}
 
-            return false;
+            //return false;
+
+            return queensConflitsCountArr.Count(x => x > 0) > 0;
         }
 
         private static void PrintBoard(int[] board)
