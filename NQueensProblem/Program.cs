@@ -13,7 +13,8 @@ namespace NQueensProblem
         public static int COUNTER = 0;
         static void Main(string[] args)
         {
-            int n = 10;
+            int n = 4;
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             if (n < 4)
             {
                 Console.WriteLine("{0} queens cannot be placed in this board", n);
@@ -21,6 +22,11 @@ namespace NQueensProblem
             }
 
             PlaceQueens(n);
+            
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine("Total time: {0} ms", elapsedMs);
+
             Console.ReadLine();
         }
 
@@ -93,8 +99,7 @@ namespace NQueensProblem
 
         private static int GetMaxConflictsQueenRow(int[] swapQueensConflictsArr)
         {
-            int max = swapQueensConflictsArr.Max();
-            var indexes = swapQueensConflictsArr.Where(x => x == max).ToList();
+            var indexes = swapQueensConflictsArr.Where(x => x == swapQueensConflictsArr.Max()).ToList();
             return indexes[random.Next(indexes.Count - 1)];
         }
 
@@ -108,13 +113,13 @@ namespace NQueensProblem
                 minConflictsColumnIndex = random.Next(board.Length-1);
             } while (minConflictsColumnIndex == maxConflictsColumnIndex);
 
-            int minColumn = board[minConflictsColumnIndex];
             
             //decrease conflicts indexes
             //DereaseConflictsCount(board, minConflictsColumnIndex, queensConflictsCountArray);
-            //DereaseConflictsCount(board, board[maxConflictsColumnIndex], queensConflictsCountArray);
+            //DereaseConflictsCount(board, maxConflictsColumnIndex, queensConflictsCountArray);
 
             //swap 
+            int minColumn = board[minConflictsColumnIndex];
             board[minConflictsColumnIndex] = board[maxConflictsColumnIndex];
             board[maxConflictsColumnIndex] = minColumn;
 
