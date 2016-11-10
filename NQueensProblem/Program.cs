@@ -10,10 +10,10 @@ namespace NQueensProblem
     class Program
     {
         private static Random random = new Random();
-        public static int COUNTER = 0;
+
         static void Main(string[] args)
         {
-            int n = 4;
+            int n = 1000;
             var watch = System.Diagnostics.Stopwatch.StartNew();
             if (n < 4)
             {
@@ -35,7 +35,7 @@ namespace NQueensProblem
             int[] board = new int[n];
             
             RandomInitBoard(board);
-            //PrintBoard(board);
+            
             int[] queensConflictsCount = InitQueensConflictsArray(board);
 
             if (!HasConflicts(queensConflictsCount))
@@ -90,41 +90,61 @@ namespace NQueensProblem
             return false;
         }
 
-        private static int GetMinConflictsQueenRow(int[] swapQueensConflictsArr)
-        {
-            int minIndex = Array.IndexOf(swapQueensConflictsArr, swapQueensConflictsArr.Min());
-            var indexes = swapQueensConflictsArr.Where(x => x == minIndex).ToList();
-            return indexes[random.Next(indexes.Count-1)];
-        }
-
         private static int GetMaxConflictsQueenRow(int[] swapQueensConflictsArr)
         {
-            var indexes = swapQueensConflictsArr.Where(x => x == swapQueensConflictsArr.Max()).ToList();
-            return indexes[random.Next(indexes.Count - 1)];
+            var indexes = new List<int>() { 0 };
+            int max = swapQueensConflictsArr[0];
+            for (int i = 1; i < swapQueensConflictsArr.Length; i++)
+            {
+                if (swapQueensConflictsArr[i] == max)
+                {
+                    indexes.Add(i);
+                }
+                else if (swapQueensConflictsArr[i] > max)
+                {
+                    max = swapQueensConflictsArr[i];
+                    indexes = new List<int>() { i };
+                }
+            }
+                
+            return indexes[random.Next(indexes.Count)];
         }
 
         private static int[] SwapQueens(int[] board, int[] queensConflictsCountArray)
         {
-            int minConflictsColumnIndex;
             int maxConflictsColumnIndex = GetMaxConflictsQueenRow(queensConflictsCountArray);
-            
-            do
-            {
-                minConflictsColumnIndex = random.Next(board.Length-1);
-            } while (minConflictsColumnIndex == maxConflictsColumnIndex);
 
-            
+            var currentQueenConflictsCount = queensConflictsCountArray[maxConflictsColumnIndex];
+            var minConflictsRowsIndexesArr = new List<int>();
+            var minConflicts = currentQueenConflictsCount;
+
+            for (int i = 0; i < board.Length; i++) //current col
+            {
+                if (i != board[maxConflictsColumnIndex]) //row check
+                {
+                    board[maxConflictsColumnIndex] = i;
+                    var conflictsCount = GetCertainColumnConflictsCount(board, maxConflictsColumnIndex);
+                    if (conflictsCount < minConflicts)
+                    {
+                        minConflicts = conflictsCount;
+                        minConflictsRowsIndexesArr.Clear();
+                        minConflictsRowsIndexesArr.Add(i);
+                    }
+                    else if (conflictsCount == minConflicts)
+                    {
+                        minConflictsRowsIndexesArr.Add(i);
+                    }
+                }
+            }
+
             //decrease conflicts indexes
-            //DereaseConflictsCount(board, minConflictsColumnIndex, queensConflictsCountArray);
             //DereaseConflictsCount(board, maxConflictsColumnIndex, queensConflictsCountArray);
 
             //swap 
-            int minColumn = board[minConflictsColumnIndex];
-            board[minConflictsColumnIndex] = board[maxConflictsColumnIndex];
-            board[maxConflictsColumnIndex] = minColumn;
+            int swapIndex = random.Next(minConflictsRowsIndexesArr.Count);
+            board[maxConflictsColumnIndex] = minConflictsRowsIndexesArr[swapIndex];
 
             //increase conflicts indexes
-            //IncreaseConflictsCount(board, minConflictsColumnIndex, queensConflictsCountArray);
             //IncreaseConflictsCount(board, maxConflictsColumnIndex, queensConflictsCountArray);
 
             queensConflictsCountArray = InitQueensConflictsArray(board);
@@ -215,14 +235,6 @@ namespace NQueensProblem
 
         private static bool HasConflicts(int[] queensConflitsCountArr)
         {
-            //for (int i = 0; i < queensConflitsCountArr.Length; i++)
-            //{
-            //    if (queensConflitsCountArr[i] > 0)
-            //        return true;
-            //}
-
-            //return false;
-
             return queensConflitsCountArr.Count(x => x > 0) > 0;
         }
 
