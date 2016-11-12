@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace KnapsackProblem
 {
-    public class Item
+    public class Chromosome
     {
         public double Mi { get; set; }
         public double Ci { get; set; }
+
+        public override string ToString() {
+            return "\t\tChromosome -> Weight: " + Mi + " Value: " + Ci + "$\n";
+        }  
     }
 }

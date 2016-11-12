@@ -44,9 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Item.cs" />
+    <Compile Include="GenericAlgorithmUtil.cs" />
+    <Compile Include="InputDataTransformer.cs" />
+    <Compile Include="Chromosome.cs" />
     <Compile Include="Knapsack.cs" />
-    <Compile Include="PopulationItem.cs" />
+    <Compile Include="Cell.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

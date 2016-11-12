@@ -8,6 +8,6 @@ namespace KnapsackProblem
 {
     public class Knapsack
     {
-        public List<PopulationItem> Populаtion { get; set; }
+        public List<Cell> Populаtion { get; set; }
     }
 }
