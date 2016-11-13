@@ -8,11 +8,13 @@ namespace KnapsackProblem
 {
     class Program
     {
-        public const int ITERATIONS_COUNT = 100;
+        public const int ITERATIONS_COUNT = 20;
         private static Random random = new Random();
         static void Main(string[] args)
         {
-            int M = 10; //kilos
+            int M = 100; //kilos
+            string input2 = System.IO.File.ReadAllText(@"KP_test_data.txt");
+
             string input = @"5 3
 5 1
 7 5
@@ -60,16 +62,18 @@ namespace KnapsackProblem
 
             for (int i = 1; i <= ITERATIONS_COUNT; i++)
             {
-                gaUtil.CreateNewGeneration(knapsack.Populаtion);
-
-                if ( i % 10 == 0 )
-                //if( i < 10 )
+                if (knapsack.Populаtion.Count > 1) { 
+                    gaUtil.CreateNewGeneration(knapsack.Populаtion);
+                    if ( i % 10 == 0 ){
+                        PrintBest(knapsack, i);
+                    }
+                }
+                else
                 {
                     PrintBest(knapsack, i);
+                    break;
                 }
             }
-
-            PrintBest(knapsack, ITERATIONS_COUNT);
 
             Console.ReadLine();
         }
