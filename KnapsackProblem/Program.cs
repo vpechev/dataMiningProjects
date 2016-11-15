@@ -8,14 +8,13 @@ namespace KnapsackProblem
 {
     class Program
     {
-        public const int ITERATIONS_COUNT = 20;
         private static Random random = new Random();
         static void Main(string[] args)
         {
-            int M = 100; //kilos
-            string input2 = System.IO.File.ReadAllText(@"KP_test_data.txt");
+            int M = 10000; //kilos
+            string input = System.IO.File.ReadAllText(@"KP_test_data.txt");
 
-            string input = @"5 3
+            string input2 = @"5 3
 5 1
 7 5
 4 3
@@ -57,20 +56,29 @@ namespace KnapsackProblem
 
             GenericAlgorithmUtil gaUtil = new GenericAlgorithmUtil(M);
             Knapsack knapsack = new Knapsack();
+            var inputChromosomes = InputDataTransformer.TransformInputData(input);
+            List<Cell> populаtion = GenerateInitialPopulation(inputChromosomes, M);
+            int isBestSameCount = 0;
 
-            knapsack.Populаtion = GenerateInitialPopulation(InputDataTransformer.TransformInputData(input), M);
-
-            for (int i = 1; i <= ITERATIONS_COUNT; i++)
+            for (int i = 1; i <= Constants.ITERATIONS_COUNT; i++)
             {
-                if (knapsack.Populаtion.Count > 1) { 
-                    gaUtil.CreateNewGeneration(knapsack.Populаtion);
-                    if ( i % 10 == 0 ){
-                        PrintBest(knapsack, i);
-                    }
+                if (populаtion.Count > 1) { 
+                    var isBestSame = gaUtil.CreateNewGeneration(ref populаtion, inputChromosomes);
+                    if(isBestSame)
+                        isBestSameCount++;
+                    else 
+                        isBestSameCount = 0;
+
+                    //if ( i % 10 == 0 ){
+                        PrintBest(populаtion, i);
+                    //}
+
+                    if (isBestSameCount == Constants.MAX_EQUAL_BEST_LIMIT)
+                        break;
                 }
                 else
                 {
-                    PrintBest(knapsack, i);
+                    PrintBest(populаtion, i);
                     break;
                 }
             }
@@ -109,9 +117,9 @@ namespace KnapsackProblem
             return populationItems;
         }
 
-        private static void PrintBest(Knapsack knapsack, int step)
+        private static void PrintBest(List<Cell> population, int step)
         {
-            var best = knapsack.Populаtion[0];
+            var best = population[0];
             Console.WriteLine("Evolution step: {0}", step);
             Console.WriteLine("\tTotal weight: {0}, value: {1}$", best.TotalMi, best.TotalCi);
             Console.WriteLine("\tDetails: ");

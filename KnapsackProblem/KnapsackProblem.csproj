@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="GenericAlgorithmUtil.cs" />
     <Compile Include="InputDataTransformer.cs" />
     <Compile Include="Chromosome.cs" />

@@ -22,7 +22,23 @@ namespace KnapsackProblem
         public int CompareTo(Cell other)
         {
             //return this.TotalCi.CompareTo(other.TotalCi);
-            return other.TotalCi.CompareTo(this.TotalCi);
+            var totalCiComparedValue = other.TotalCi.CompareTo(this.TotalCi);
+
+            if (totalCiComparedValue == 0)
+                return this.TotalMi.CompareTo(other.TotalMi);
+            
+            return totalCiComparedValue;
         }
+
+        public override bool Equals(object obj)
+        {
+            Cell other = (Cell)obj;
+            return Array.Equals(this.Chromosomes, other.Chromosomes);
+        }
+
+        public override string ToString()
+        {
+            return "\t\tCell -> Weight: " + TotalMi + " Value: " + TotalCi + "$\n";
+        } 
     }   
 }

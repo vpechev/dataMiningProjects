@@ -14,7 +14,18 @@ namespace KnapsackProblem
         public int CompareTo(Chromosome other)
         {
             //return this.TotalCi.CompareTo(other.TotalCi);
+            int compareRes = other.Ci.CompareTo(this.Ci);
+            if (compareRes == 0)
+            {
+                return this.Mi.CompareTo(other.Mi);
+            }
             return other.Ci.CompareTo(this.Ci);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = (Chromosome)obj;
+            return this.Ci == other.Ci && this.Mi == other.Mi;
         }
 
         public override string ToString() {

@@ -18,8 +18,8 @@ namespace KnapsackProblem
                 string[] parts = currentInput.Split(' ');
                 inputItems.Add(new Chromosome()
                 {
-                    Mi = Double.Parse(parts[0]),
-                    Ci = Double.Parse(parts[1])
+                    Ci = Double.Parse(parts[0]),
+                    Mi = Double.Parse(parts[1])
                 });
             }
             return inputItems;
