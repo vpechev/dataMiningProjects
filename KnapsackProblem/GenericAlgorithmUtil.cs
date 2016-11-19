@@ -105,10 +105,12 @@ namespace KnapsackProblem
 
             };
 
+            var firstChromosomesSubset = firstParentChromosomes.GetRange(0, randomIndex);
+            firstParentChromosomes.Sort();
             // take first half from the first parent
-            for (int i = 0; i < randomIndex; i++)
+            for (int i = 0; i < firstChromosomesSubset.Count; i++)
             {
-                AddChromosomeToCell(childCell, firstParentChromosomes[i]);
+                AddChromosomeToCell(childCell, firstChromosomesSubset[i]);
             }
 
             // take second half from the second parent
@@ -121,31 +123,20 @@ namespace KnapsackProblem
 
 
             //add additional chromosomes
-            //if (childCell.TotalMi < KnapsackMaxWeight)
-            //{
-            //    var modifiedAdditionalChromosomesOrder = firstParentChromosomes.GetRange(randomIndex, firstParentChromosomes.Count - randomIndex);
-            //    modifiedAdditionalChromosomesOrder.Sort();
-            //    for (int i = randomIndex; i < modifiedAdditionalChromosomesOrder.Count(); i++)
-            //    {
-            //        AddChromosomeToCell(childCell, modifiedAdditionalChromosomesOrder[i]);
+            if (childCell.TotalMi < KnapsackMaxWeight)
+            {
+                var modifiedAdditionalChromosomesOrder = firstParentChromosomes.GetRange(randomIndex, firstParentChromosomes.Count - randomIndex);
+                modifiedAdditionalChromosomesOrder.AddRange(secondParentChromosomes.GetRange(0, randomIndex));
+                modifiedAdditionalChromosomesOrder.Sort();
+                
+                for (int i = randomIndex; i < modifiedAdditionalChromosomesOrder.Count(); i++)
+                {
+                    AddChromosomeToCell(childCell, modifiedAdditionalChromosomesOrder[i]);
 
-            //        if (childCell.TotalMi == KnapsackMaxWeight)
-            //            return childCell;
-            //    }
-            //}
-
-            //if (childCell.TotalMi < KnapsackMaxWeight)
-            //{
-            //    var modifiedAdditionalChromosomesOrder = secondParentChromosomes.GetRange(randomIndex, secondParentChromosomes.Count - randomIndex);
-            //    modifiedAdditionalChromosomesOrder.Sort();
-            //    for (int i = 0; i < modifiedAdditionalChromosomesOrder.Count; i++)
-            //    {
-            //        AddChromosomeToCell(childCell, modifiedAdditionalChromosomesOrder[i]);
-
-            //        if (childCell.TotalMi == KnapsackMaxWeight)
-            //            return childCell;
-            //    }
-            //}
+                    if (childCell.TotalMi == KnapsackMaxWeight)
+                        return childCell;
+                }
+            }
 
             return childCell;
         }

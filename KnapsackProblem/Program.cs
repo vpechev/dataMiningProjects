@@ -11,10 +11,10 @@ namespace KnapsackProblem
         private static Random random = new Random();
         static void Main(string[] args)
         {
-            int M = 10000; //kilos
-            string input = System.IO.File.ReadAllText(@"KP_test_data.txt");
+            int M = 10; //kilos
+            string input2 = System.IO.File.ReadAllText(@"KP_test_data.txt");
 
-            string input2 = @"5 3
+            string input = @"5 3
 5 1
 7 5
 4 3
@@ -23,16 +23,16 @@ namespace KnapsackProblem
 3 2
 1 2
 4 6
-2 800
+800 2
 1 1
 3 2
 1 2
 3 3
-2 1000
+1000 2
 2 1
 3 2
-5 100
-1 100
+100 5
+100 1
 1 2
 5 1
 7 5
@@ -42,7 +42,7 @@ namespace KnapsackProblem
 3 2
 1 2
 4 6
-3 50
+50 3
 1 1
 3 2
 1 2
@@ -50,8 +50,8 @@ namespace KnapsackProblem
 2 6
 2 1
 3 2
-2 2500
-1 500
+2500 2
+500 1
 1 2";
 
             GenericAlgorithmUtil gaUtil = new GenericAlgorithmUtil(M);
@@ -110,7 +110,7 @@ namespace KnapsackProblem
                 }
             }
 
-            if (currentCell.TotalMi > 0 && currentCell.TotalMi < maxMi) { 
+            if (currentCell.TotalMi > 0 && currentCell.TotalMi <= maxMi) { 
                 populationItems.Add(currentCell);
             }
 
