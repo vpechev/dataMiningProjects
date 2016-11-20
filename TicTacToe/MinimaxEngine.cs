@@ -22,7 +22,10 @@ namespace TicTacToe
             }
 
             //return the a in Actions(state) - all possible moves maximizing Min-Value(Result(a, state))
-            return successors.Max().StateConfiguration;
+            var successorsMax = successors.Max();
+            var maxSuccessorsList = successors.Where(x => x.UtilityValue == successorsMax.UtilityValue).ToList();
+            var random = new Random(System.DateTime.Now.Millisecond);
+            return maxSuccessorsList[random.Next(0, maxSuccessorsList.Count)].StateConfiguration;
         }
 
         public static int MaxValue(int[] state, int alfa, int beta)
@@ -88,46 +91,104 @@ namespace TicTacToe
 
         private static int ComputeUtilityValue(int[] state)
         {
-            int[,] threeInALine = {
-                      { 0, 1, 2 },
-                      { 3, 4, 5 },
-                      { 6, 7, 8 },
-                      { 0, 3, 6 },
-                      { 1, 4, 7 },
-                      { 2, 5, 8 },
-                      { 0, 4, 8 },
-                      { 2, 4, 6 }
+            int[,] threeInALineArr = {
+                      { state[0], state[1], state[2] },  //First row
+                      { state[3], state[4], state[5] },  //Second row
+                      { state[6], state[7], state[8] },  //Third row
+                      { state[0], state[3], state[6] },  //First column
+                      { state[1], state[4], state[7] },  //Second column
+                      { state[2], state[5], state[8] },  //Third column
+                      { state[0], state[4], state[8] },  //Main diagonal
+                      { state[2], state[4], state[6] }   //Reversed diagonal
             };
 
-            int[,] heuristingArray = {
-                {     0,   -10,  -100, -1000 },
-                {    10,     0,     0,     0 },
-                {   100,     0,     0,     0 },
-                {  1000,     0,     0,     0 }
-            };
+            int threeInALineValue = 100,
+                twoInALineValue = 10,
+                oneInALineValue = 1,
+                emptyValue = 0;
 
             int utilityValue = 0;
-  
-            for (int i = 0; i < 8; i++)  {
-                int maxPoints = 0, minPoints = 0;
-                
-                for (int j = 0; j < 3; j++)  {
-                    var piece = state[threeInALine[i, j]];
-      
-                    if (piece == Constants.MAX_PLAYER_SYMBOL){
-                        maxPoints++;
-                    }
-                    else if (piece == Constants.MIN_PLAYER_SYMBOL)
-                    {
-                        minPoints++;
-                    }
-                }
 
-                utilityValue += heuristingArray[maxPoints, minPoints];
+            for (int i = 0; i < threeInALineArr.GetLength(0); i++)
+            {
+                if (threeInALineArr[i, 0] == threeInALineArr[i, 1] && threeInALineArr[i, 0] == threeInALineArr[i, 2] && threeInALineArr[i, 1] == threeInALineArr[i, 2] && threeInALineArr[i, 0] == Constants.MAX_PLAYER_SYMBOL)
+                {
+                    utilityValue += threeInALineValue;
+                }
+                else if (twoEqualPlaces(threeInALineArr[i, 0], threeInALineArr[i, 1], threeInALineArr[i, 2]))
+                {
+                    utilityValue += twoInALineValue;
+                }
+                else if (oneEqualPlaces(threeInALineArr[i, 0], threeInALineArr[i, 1], threeInALineArr[i, 2]))
+                {
+                    utilityValue += oneInALineValue;
+                }
+                else
+                {
+                    utilityValue += emptyValue;
+                }
             }
 
             return utilityValue;
         }
+
+        private static bool twoEqualPlaces(int firstElement, int secondElement, int thirdElement)
+        {
+            if (   firstElement == secondElement && thirdElement == Constants.FREE_PLACE_SYMBOL && firstElement == Constants.MAX_PLAYER_SYMBOL
+                || firstElement == thirdElement && secondElement == Constants.FREE_PLACE_SYMBOL && firstElement == Constants.MAX_PLAYER_SYMBOL
+                || secondElement == thirdElement && firstElement == Constants.FREE_PLACE_SYMBOL && secondElement == Constants.MAX_PLAYER_SYMBOL)
+                return true;
+
+            return false;
+        }
+
+        private static bool oneEqualPlaces(int firstElement, int secondElement, int thirdElement)
+        {
+            if (   firstElement == Constants.MAX_PLAYER_SYMBOL && secondElement == thirdElement && secondElement == Constants.FREE_PLACE_SYMBOL
+                || secondElement == Constants.MAX_PLAYER_SYMBOL && firstElement == thirdElement && firstElement == Constants.FREE_PLACE_SYMBOL
+                || thirdElement == Constants.MAX_PLAYER_SYMBOL && firstElement == secondElement && firstElement == Constants.FREE_PLACE_SYMBOL)
+                return true;
+
+            return false;
+        }
+
+        //private static int ComputeUtilityValue(int[] state)
+        //{
+        //    int[,] threeInALine = {
+        //              { 0, 1, 2 },  //First row
+        //              { 3, 4, 5 },  //Second row
+        //              { 6, 7, 8 },  //Third row
+        //              { 0, 3, 6 },  //First column
+        //              { 1, 4, 7 },  //Second column
+        //              { 2, 5, 8 },  //Third column
+        //              { 0, 4, 8 },  //Main diagonal
+        //              { 2, 4, 6 }   //Reversed diagonal
+        //    };
+
+        //    int[,] heuristingArray = {
+        //        {     0,   -10,  -100, -1000 },
+        //        {    10,     0,     0,     0 },
+        //        {   100,     0,     0,     0 },
+        //        {  1000,     0,     0,     0 }
+        //    };
+
+        //    int utilityValue = 0;
+  
+        //    for (int i = 0; i < state.Length; i++)
+        //    {
+        //        int maxPoints = 0, minPoints = 0;
+        //        if (state[i] == Constants.MAX_PLAYER_SYMBOL){
+        //                maxPoints++;
+        //        }
+        //        else if (state[i] == Constants.MIN_PLAYER_SYMBOL)
+        //        {
+        //            minPoints++;
+        //        }
+        //        utilityValue += heuristingArray[minPoints, maxPoints];
+        //    }
+
+        //    return utilityValue;
+        //}
 
         public static bool IsTerminal(int[] state)
         {

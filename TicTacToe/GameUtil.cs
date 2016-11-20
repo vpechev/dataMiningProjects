@@ -19,13 +19,14 @@ namespace TicTacToe
             State state = new State()
             {
                 StateConfiguration = new int[9]
-
             };
 
 
-            int[] bestFirstChoise = { 0, 2, 4, 6, 8 };
+            int[] bestFirstChoise = { 0/*, 2, 4, 6, 8 */};
             Random random = new Random();
-            state.StateConfiguration[bestFirstChoise[random.Next(bestFirstChoise.Length - 1)]] = Constants.MAX_PLAYER_SYMBOL;
+            if (true) { 
+                state.StateConfiguration[bestFirstChoise[random.Next(bestFirstChoise.Length - 1)]] = Constants.MAX_PLAYER_SYMBOL;
+            }
 
             Console.WriteLine("Computer: ");
             StateUtil.printState(state.StateConfiguration);
