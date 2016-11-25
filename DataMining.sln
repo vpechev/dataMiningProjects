@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlidingBlocks", "SlidingBlo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnapsackProblem", "KnapsackProblem\KnapsackProblem.csproj", "{7EC5C53F-239E-4FDD-ADA9-43404065E58C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnnProblem", "KnnProblem\KnnProblem.csproj", "{9DB40BC2-1AF0-4C03-80B0-BF2B95487D7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,12 @@ Global
 		{7EC5C53F-239E-4FDD-ADA9-43404065E58C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EC5C53F-239E-4FDD-ADA9-43404065E58C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7EC5C53F-239E-4FDD-ADA9-43404065E58C}.Release|x64.ActiveCfg = Release|Any CPU
+		{9DB40BC2-1AF0-4C03-80B0-BF2B95487D7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DB40BC2-1AF0-4C03-80B0-BF2B95487D7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DB40BC2-1AF0-4C03-80B0-BF2B95487D7C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9DB40BC2-1AF0-4C03-80B0-BF2B95487D7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DB40BC2-1AF0-4C03-80B0-BF2B95487D7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DB40BC2-1AF0-4C03-80B0-BF2B95487D7C}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
