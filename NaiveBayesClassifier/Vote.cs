@@ -24,10 +24,10 @@ namespace NaiveBayesClassifier
         public bool Crime { get; set; }
         public bool DutyFreeExports { get; set; }
         public bool ExportAdministrationActSouthAfrica { get; set; }
-        public bool Class { get; set; }
+        public bool IsRepublican { get; set; }
 
         public int YCount { get; set; }
         public int NCount { get; set; }
-        public int AllAttrCount { get; set; }
+        //public int AllAttrCount { get; set; }
     }
 }
