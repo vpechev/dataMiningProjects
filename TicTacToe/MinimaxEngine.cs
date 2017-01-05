@@ -14,7 +14,7 @@ namespace TicTacToe
             int alfa = Int32.MinValue;
             int beta = Int32.MaxValue;
 
-            List<State> successors = GenerateSuccessors(state);
+            List<State> successors = GenerateSuccessors(state, Constants.MAX_PLAYER_SYMBOL);
             foreach (var s in successors)
             {
                 int utilityValue = MinValue(s.StateConfiguration, alfa, beta);
@@ -32,12 +32,12 @@ namespace TicTacToe
         {
             if (IsTerminal(state))
             {
-                return ComputeUtilityValue(state);
+                return ComputeUtilityValue(state, true);
             }
             else
             {
                 int v = Int32.MinValue;
-                foreach (State s in GenerateSuccessors(state))
+                foreach (State s in GenerateSuccessors(state, Constants.MAX_PLAYER_SYMBOL))
                 {
                     v = Math.Max(v, MinValue(s.StateConfiguration, alfa, beta));
 
@@ -54,12 +54,12 @@ namespace TicTacToe
         {
             if (IsTerminal(state))
             {
-                return ComputeUtilityValue(state);
+                return ComputeUtilityValue(state, false);
             }
             else
             {
                 int v = Int32.MinValue;
-                foreach (State s in GenerateSuccessors(state))
+                foreach (State s in GenerateSuccessors(state, Constants.MIN_PLAYER_SYMBOL))
                 {
                     v = Math.Max(v, MaxValue(s.StateConfiguration, alfa, beta));
 
@@ -72,7 +72,7 @@ namespace TicTacToe
             }
         }
 
-        private static List<State> GenerateSuccessors(int[] state)
+        private static List<State> GenerateSuccessors(int[] state, int playerSymbol)
         {
             List<State> successors = new List<State>();
             for (int i = 0; i < state.Length; i++)
@@ -81,7 +81,7 @@ namespace TicTacToe
                 {
                     int[] newSuccessor = new int[state.Length];
                     Array.Copy(state, newSuccessor, state.Length);
-                    newSuccessor[i] = Constants.MAX_PLAYER_SYMBOL;
+                    newSuccessor[i] = playerSymbol;
                     successors.Add(new State() { StateConfiguration = newSuccessor });
                 }
             }
@@ -89,7 +89,7 @@ namespace TicTacToe
             return successors;
         }
 
-        private static int ComputeUtilityValue(int[] state)
+        private static int ComputeUtilityValue(int[] state, bool isMax)
         {
             int[,] threeInALineArr = {
                       { state[0], state[1], state[2] },  //First row
@@ -111,17 +111,27 @@ namespace TicTacToe
 
             for (int i = 0; i < threeInALineArr.GetLength(0); i++)
             {
-                if (threeInALineArr[i, 0] == threeInALineArr[i, 1] && threeInALineArr[i, 0] == threeInALineArr[i, 2] && threeInALineArr[i, 1] == threeInALineArr[i, 2] && threeInALineArr[i, 0] == Constants.MAX_PLAYER_SYMBOL)
+                if (threeInALineArr[i, 0] == threeInALineArr[i, 1] && threeInALineArr[i, 0] == threeInALineArr[i, 2] && threeInALineArr[i, 1] == threeInALineArr[i, 2])
                 {
-                    utilityValue += threeInALineValue;
+                    if (threeInALineArr[i, 0] == Constants.MAX_PLAYER_SYMBOL && isMax)
+                        utilityValue += threeInALineValue;
+                    else if (threeInALineArr[i, 0] == Constants.MIN_PLAYER_SYMBOL && !isMax)
+                        utilityValue -= threeInALineValue;
+                    break;
                 }
                 else if (twoEqualPlaces(threeInALineArr[i, 0], threeInALineArr[i, 1], threeInALineArr[i, 2]))
                 {
-                    utilityValue += twoInALineValue;
+                    if (threeInALineArr[i, 0] == Constants.MAX_PLAYER_SYMBOL && isMax)
+                        utilityValue += twoInALineValue;
+                    else if (threeInALineArr[i, 0] == Constants.MIN_PLAYER_SYMBOL && !isMax)
+                        utilityValue -= twoInALineValue;
                 }
                 else if (oneEqualPlaces(threeInALineArr[i, 0], threeInALineArr[i, 1], threeInALineArr[i, 2]))
                 {
-                    utilityValue += oneInALineValue;
+                    if (threeInALineArr[i, 0] == Constants.MAX_PLAYER_SYMBOL && isMax)
+                        utilityValue += oneInALineValue;
+                    else if (threeInALineArr[i, 0] == Constants.MIN_PLAYER_SYMBOL && !isMax)
+                        utilityValue -= oneInALineValue;
                 }
                 else
                 {
@@ -134,9 +144,9 @@ namespace TicTacToe
 
         private static bool twoEqualPlaces(int firstElement, int secondElement, int thirdElement)
         {
-            if (   firstElement == secondElement && thirdElement == Constants.FREE_PLACE_SYMBOL && firstElement == Constants.MAX_PLAYER_SYMBOL
-                || firstElement == thirdElement && secondElement == Constants.FREE_PLACE_SYMBOL && firstElement == Constants.MAX_PLAYER_SYMBOL
-                || secondElement == thirdElement && firstElement == Constants.FREE_PLACE_SYMBOL && secondElement == Constants.MAX_PLAYER_SYMBOL)
+            if (   firstElement == secondElement && thirdElement == Constants.FREE_PLACE_SYMBOL && firstElement != Constants.FREE_PLACE_SYMBOL
+                || firstElement == thirdElement && secondElement == Constants.FREE_PLACE_SYMBOL && firstElement != Constants.FREE_PLACE_SYMBOL
+                || secondElement == thirdElement && firstElement == Constants.FREE_PLACE_SYMBOL && secondElement!= Constants.FREE_PLACE_SYMBOL)
                 return true;
 
             return false;
@@ -144,9 +154,9 @@ namespace TicTacToe
 
         private static bool oneEqualPlaces(int firstElement, int secondElement, int thirdElement)
         {
-            if (   firstElement == Constants.MAX_PLAYER_SYMBOL && secondElement == thirdElement && secondElement == Constants.FREE_PLACE_SYMBOL
-                || secondElement == Constants.MAX_PLAYER_SYMBOL && firstElement == thirdElement && firstElement == Constants.FREE_PLACE_SYMBOL
-                || thirdElement == Constants.MAX_PLAYER_SYMBOL && firstElement == secondElement && firstElement == Constants.FREE_PLACE_SYMBOL)
+            if (   firstElement != Constants.FREE_PLACE_SYMBOL && secondElement == thirdElement && secondElement == Constants.FREE_PLACE_SYMBOL
+                || secondElement != Constants.FREE_PLACE_SYMBOL && firstElement == thirdElement && firstElement == Constants.FREE_PLACE_SYMBOL
+                || thirdElement != Constants.FREE_PLACE_SYMBOL && firstElement == secondElement && firstElement == Constants.FREE_PLACE_SYMBOL)
                 return true;
 
             return false;
