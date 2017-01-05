@@ -1,0 +1,8 @@
+D:\dataMiningProjects\KnnProblem\bin\Debug\KnnProblem.exe.config
+D:\dataMiningProjects\KnnProblem\bin\Debug\KnnProblem.exe
+D:\dataMiningProjects\KnnProblem\bin\Debug\KnnProblem.pdb
+D:\dataMiningProjects\KnnProblem\obj\Debug\KnnProblem.csprojResolveAssemblyReference.cache
+D:\dataMiningProjects\KnnProblem\obj\Debug\KnnProblem.exe
+D:\dataMiningProjects\KnnProblem\obj\Debug\KnnProblem.pdb
+D:\dataMiningProjects\KnnProblem\bin\Debug\PowerCollections.dll
+D:\dataMiningProjects\KnnProblem\bin\Debug\PowerCollections.xml
