@@ -1,0 +1,12 @@
+G:\Codding\ASPNET\dataMiningProjects\KMeans\bin\Debug\KMeans.exe.config
+G:\Codding\ASPNET\dataMiningProjects\KMeans\bin\Debug\KMeans.exe
+G:\Codding\ASPNET\dataMiningProjects\KMeans\bin\Debug\KMeans.pdb
+G:\Codding\ASPNET\dataMiningProjects\KMeans\obj\Debug\KMeans.csprojResolveAssemblyReference.cache
+G:\Codding\ASPNET\dataMiningProjects\KMeans\obj\Debug\KMeans.exe
+G:\Codding\ASPNET\dataMiningProjects\KMeans\obj\Debug\KMeans.pdb
+G:\Codding\ASPNET\dataMiningProjects\KMeans\bin\Debug\System.Drawing.PSD.dll
+G:\Codding\ASPNET\dataMiningProjects\KMeans\bin\Debug\System.Drawing.PSD.pdb
+G:\Codding\ASPNET\dataMiningProjects\KMeans\bin\Debug\Graphics.dll
+G:\Codding\ASPNET\dataMiningProjects\KMeans\bin\Debug\Microsoft.Web.XmlTransform.dll
+G:\Codding\ASPNET\dataMiningProjects\KMeans\bin\Debug\NuGet.Core.dll
+G:\Codding\ASPNET\dataMiningProjects\KMeans\bin\Debug\Graphics.xml
